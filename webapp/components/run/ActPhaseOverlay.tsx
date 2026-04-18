@@ -1,1 +1,3 @@
-// Face verification status, countdown timer, extend/abort actions
+export default function ActPhaseOverlay() {
+  return null; // TODO: implement face verification overlay
+}
