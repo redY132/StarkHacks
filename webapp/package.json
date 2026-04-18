@@ -1,0 +1,30 @@
+{
+  "name": "panko-app",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~52.0.0",
+    "expo-router": "~4.0.0",
+    "expo-camera": "~15.0.0",
+    "expo-image-picker": "~15.0.0",
+    "expo-notifications": "~0.28.0",
+    "react": "18.3.1",
+    "react-native": "0.76.0",
+    "firebase": "^11.0.0",
+    "@react-native-firebase/app": "^21.0.0",
+    "@react-native-firebase/auth": "^21.0.0",
+    "@react-native-firebase/firestore": "^21.0.0",
+    "@react-native-firebase/storage": "^21.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "typescript": "^5.3.0",
+    "@types/react": "~18.3.0"
+  }
+}

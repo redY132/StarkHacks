@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Panko",
+    "slug": "panko",
+    "version": "1.0.0",
+    "scheme": "panko",
+    "platforms": ["ios", "android", "web"],
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-camera",
+      "expo-notifications"
+    ]
+  }
+}

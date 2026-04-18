@@ -1,0 +1,1 @@
+// Subscribes to STATE_UPDATE, POSITION_UPDATE, BATTERY_UPDATE from WebSocket
