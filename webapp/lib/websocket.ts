@@ -63,6 +63,7 @@ export class RobotWebSocketManager {
   private stateListeners = new Set<(s: WebSocketConnectionState) => void>();
   private telemetryListeners = new Set<TelemetryListener>();
   private faceEnrollmentListeners = new Set<(msg: FaceEnrolledMessage) => void>();
+  private rawMessageListeners = new Set<(raw: string) => void>();
 
   getConnectionState(): WebSocketConnectionState {
     return this.connectionState;
@@ -130,6 +131,13 @@ export class RobotWebSocketManager {
     };
   }
 
+  subscribeToRawMessage(callback: (raw: string) => void): () => void {
+    this.rawMessageListeners.add(callback);
+    return () => {
+      this.rawMessageListeners.delete(callback);
+    };
+  }
+
   private clearReconnectTimer(): void {
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
@@ -170,6 +178,7 @@ export class RobotWebSocketManager {
       };
 
       ws.onmessage = (event) => {
+        this.rawMessageListeners.forEach((l) => { try { l(String(event.data)); } catch {} });
         try {
           const parsed: unknown = JSON.parse(String(event.data));
           if (

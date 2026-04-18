@@ -113,6 +113,8 @@ export type FaceEnrolledMessage = {
   model?: string;
 };
 
+export type PingCommand = { type: 'PING'; ts: number };
+
 export type RobotCommand =
   | DispatchCommand
   | ManualDriveCommand
@@ -120,7 +122,8 @@ export type RobotCommand =
   | ExtendStandbyCommand
   | AbortReturnCommand
   | StartMappingCommand
-  | EnrollFaceCommand;
+  | EnrollFaceCommand
+  | PingCommand;
 
 export type WebSocketConnectionState =
   | 'disconnected'
