@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthProvider';
 
 export default function HomeIndex(): ReactElement {
   const { user, signOut } = useAuth();

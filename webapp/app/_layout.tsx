@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import type { ReactElement } from 'react';
 
-import { AuthProvider, AuthRouterShell } from '@/hooks/useAuth';
+import { AuthProvider, AuthRouterShell } from '@/contexts/AuthProvider';
 
 export default function RootLayout(): ReactElement {
   return (

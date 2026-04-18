@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthProvider';
 
 export default function SignInScreen(): ReactElement {
   const { signInWithEmail } = useAuth();
