@@ -15,7 +15,11 @@ export default function RunScreen() {
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    try { robotWebSocket.connect(); } catch (e) { console.warn('WS connect failed', e); }
+    try {
+      robotWebSocket.connect('ws://10.10.8.67:8765');
+    } catch (e) {
+      console.error('[WS] connect failed:', e);
+    }
   }, []);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ export default function WsTestButton() {
 
   useEffect(() => {
     return robotWebSocket.subscribeToRawMessage((raw) => {
+      console.log('[WS recv]', raw);
       setLastMessage(raw.length > 200 ? raw.slice(0, 200) + '…' : raw);
     });
   }, []);
@@ -17,6 +18,7 @@ export default function WsTestButton() {
     const ts = Date.now();
     try {
       robotWebSocket.sendCommand({ type: 'PING', ts });
+      console.log('[WS send]', JSON.stringify({ type: 'PING', ts }));
       setLastSentTs(ts);
     } catch (e) {
       setLastMessage(e instanceof Error ? e.message : String(e));

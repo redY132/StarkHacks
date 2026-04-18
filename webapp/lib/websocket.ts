@@ -6,7 +6,7 @@ import {
   type WebSocketConnectionState,
 } from '@/types';
 
-const DEFAULT_WS_URL = process.env.EXPO_PUBLIC_ROBOT_WS_URL ?? '';
+const DEFAULT_WS_URL = process.env.EXPO_PUBLIC_ROBOT_WS_URL ?? 'ws://10.10.8.67:8765';
 const INITIAL_RECONNECT_DELAY_MS = 1000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 
@@ -94,6 +94,14 @@ export class RobotWebSocketManager {
     if (!url) {
       throw new Error('WebSocket URL missing. Set EXPO_PUBLIC_ROBOT_WS_URL or pass a URL.');
     }
+    if (
+      this.socket &&
+      (this.socket.readyState === WebSocket.OPEN ||
+        this.socket.readyState === WebSocket.CONNECTING)
+    ) {
+      return;
+    }
+    console.log('[WS] connecting to', url);
     this.manualClose = false;
     this.url = url;
     this.clearReconnectTimer();
