@@ -20,6 +20,9 @@ const REPEAT_OPTIONS = ['Daily', 'Weekly', 'Monthly'] as const;
 export default function AddMedicationScreen() {
   const { patientId } = useLocalSearchParams<{ patientId: string }>();
   const [medName, setMedName] = useState('');
+  const [description, setDescription] = useState('');
+  const [doseDescription, setDoseDescription] = useState('');
+  const [prescribedBy, setPrescribedBy] = useState('');
   const [hour, setHour] = useState(10);
   const [minute, setMinute] = useState(0);
   const [amPm, setAmPm] = useState<'AM' | 'PM'>('AM');
@@ -58,13 +61,22 @@ export default function AddMedicationScreen() {
       Alert.alert('Medication name required');
       return;
     }
+    if (!prescribedBy.trim()) {
+      Alert.alert('Prescribed By required');
+      return;
+    }
     if (!patientId) {
       router.back();
       return;
     }
     setSaving(true);
     try {
-      await updatePatientMedicines(patientId, medName.trim());
+      await updatePatientMedicines(patientId, {
+        name: medName.trim(),
+        description: description.trim(),
+        dose_description: doseDescription.trim(),
+        prescribed_by: prescribedBy.trim(),
+      });
       router.back();
     } catch (e) {
       console.error('AddMedication: failed to save', e);
@@ -100,6 +112,52 @@ export default function AddMedicationScreen() {
             <Pressable hitSlop={8}>
               <MaterialCommunityIcons name="barcode-scan" size={20} color="#9CA3AF" />
             </Pressable>
+          </View>
+        </View>
+
+        {/* Description */}
+        <View style={styles.card}>
+          <Text style={styles.fieldLabel}>Description</Text>
+          <TextInput
+            style={styles.multilineInput}
+            placeholder="e.g. Used to manage moderate to severe chronic pain"
+            placeholderTextColor="#9CA3AF"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            numberOfLines={3}
+            textAlignVertical="top"
+          />
+        </View>
+
+        {/* Dose Description */}
+        <View style={styles.card}>
+          <Text style={styles.fieldLabel}>Dose Description</Text>
+          <TextInput
+            style={styles.multilineInput}
+            placeholder="e.g. Take 1 tablet orally every 8 hours with or without food"
+            placeholderTextColor="#9CA3AF"
+            value={doseDescription}
+            onChangeText={setDoseDescription}
+            multiline
+            numberOfLines={3}
+            textAlignVertical="top"
+          />
+        </View>
+
+        {/* Prescribed By */}
+        <View style={styles.card}>
+          <Text style={styles.fieldLabel}>Prescribed By</Text>
+          <View style={styles.inputRow}>
+            <Ionicons name="person-outline" size={20} color="#9CA3AF" />
+            <TextInput
+              style={styles.inputField}
+              placeholder="e.g. Dr. Sarah Mitchell"
+              placeholderTextColor="#9CA3AF"
+              value={prescribedBy}
+              onChangeText={setPrescribedBy}
+              autoCapitalize="words"
+            />
           </View>
         </View>
 
@@ -218,6 +276,22 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
+  },
+  fieldLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#6B7280',
+    marginBottom: 10,
+    letterSpacing: 0.3,
+  },
+  multilineInput: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: '#111',
+    minHeight: 76,
   },
   inputRow: {
     flexDirection: 'row',

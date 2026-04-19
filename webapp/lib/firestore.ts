@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 
 import { auth, db } from '@/lib/firebase';
-import type { Patient, Room, Schedule, ScheduleUpdate } from '@/types';
+import type { MedicineEntry, Patient, Room, Schedule, ScheduleUpdate } from '@/types';
 
 function requireUid(): string {
   const uid = auth.currentUser?.uid;
@@ -44,7 +44,16 @@ function mapPatientDoc(id: string, data: DocumentData): Patient {
       ? data.faceEmbeddingModel
       : undefined,
     medicines: Array.isArray(data.medicines)
-      ? data.medicines.map((m) => String(m))
+      ? data.medicines.map((m): MedicineEntry =>
+          typeof m === 'string'
+            ? { name: m, description: '', dose_description: '', prescribed_by: '' }
+            : {
+                name: String(m.name ?? ''),
+                description: String(m.description ?? ''),
+                dose_description: String(m.dose_description ?? ''),
+                prescribed_by: String(m.prescribed_by ?? ''),
+              },
+        )
       : [],
   };
 }
@@ -152,12 +161,12 @@ export async function updatePatientEmbedding(
 
 export async function updatePatientMedicines(
   patientId: string,
-  medicineName: string,
+  entry: MedicineEntry,
 ): Promise<void> {
   const userId = requireUid();
   const ref = doc(db, 'users', userId, 'patients', patientId);
   await updateDoc(ref, {
-    medicines: arrayUnion(medicineName),
+    medicines: arrayUnion(entry),
     updatedAt: serverTimestamp(),
   });
 }

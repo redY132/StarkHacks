@@ -91,8 +91,8 @@ export default function PatientList({
                 {patient.medicines.length === 0 ? (
                   <Text style={styles.detailValue}>No medications assigned</Text>
                 ) : (
-                  patient.medicines.map((m) => (
-                    <Text key={m} style={styles.detailValue}>• {m}</Text>
+                  patient.medicines.map((m, i) => (
+                    <Text key={i} style={styles.detailValue}>• {m.name}</Text>
                   ))
                 )}
 

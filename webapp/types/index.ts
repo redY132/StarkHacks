@@ -1,10 +1,17 @@
+export type MedicineEntry = {
+  name: string;
+  description: string;
+  dose_description: string;
+  prescribed_by: string;
+};
+
 export type Patient = {
   id: string;
   name: string;
   roomId: string;
   faceEmbedding: number[];
   faceEmbeddingModel?: string;
-  medicines: string[];
+  medicines: MedicineEntry[];
 };
 
 export type Medicine = {
