@@ -981,9 +981,9 @@ CONFIG_PARTITION_TABLE_MD5=y
 # LiDAR Mapping Config
 #
 # default:
-CONFIG_WIFI_SSID="myssid"
+CONFIG_WIFI_SSID="Josh"
 # default:
-CONFIG_WIFI_PASSWORD="mypassword"
+CONFIG_WIFI_PASSWORD="Jr091207!"
 # default:
 CONFIG_WS_URI="ws://192.168.1.100:8765"
 # default:
