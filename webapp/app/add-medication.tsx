@@ -113,7 +113,7 @@ export default function AddMedicationScreen() {
             <TextInput
               style={styles.inputField}
               placeholder="Medication name"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#7C6B5E"
               value={medName}
               onChangeText={setMedName}
               autoCapitalize="words"
@@ -130,7 +130,7 @@ export default function AddMedicationScreen() {
           <TextInput
             style={styles.multilineInput}
             placeholder="e.g. Used to manage moderate to severe chronic pain"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#7C6B5E"
             value={description}
             onChangeText={setDescription}
             multiline
@@ -145,7 +145,7 @@ export default function AddMedicationScreen() {
           <TextInput
             style={styles.multilineInput}
             placeholder="e.g. Take 1 tablet orally every 8 hours with or without food"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#7C6B5E"
             value={doseDescription}
             onChangeText={setDoseDescription}
             multiline
@@ -162,7 +162,7 @@ export default function AddMedicationScreen() {
             <TextInput
               style={styles.inputField}
               placeholder="e.g. Dr. Sarah Mitchell"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#7C6B5E"
               value={prescribedBy}
               onChangeText={setPrescribedBy}
               autoCapitalize="words"

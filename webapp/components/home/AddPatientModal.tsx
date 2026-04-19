@@ -121,6 +121,7 @@ export default function AddPatientModal({ visible, onClose, onPatientAdded }: Pr
                 value={name}
                 onChangeText={setName}
                 placeholder="Patient name"
+                placeholderTextColor="#7C6B5E"
                 autoCapitalize="words"
               />
 
@@ -133,6 +134,7 @@ export default function AddPatientModal({ visible, onClose, onPatientAdded }: Pr
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   placeholder="e.g. +1 (555) 123-4567"
+                  placeholderTextColor="#7C6B5E"
                   keyboardType="phone-pad"
                   autoComplete="tel"
                 />

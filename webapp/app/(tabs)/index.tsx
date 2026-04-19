@@ -67,9 +67,9 @@ export default function HomeScreen() {
         <View style={styles.bannerLeft}>
           <Text style={styles.bannerEyebrow}>PANKO</Text>
           <Text style={styles.bannerHeadline}>
-            Forget your{'\n'}breadcrumbs—{'\n'}just don't forget{'\n'}your medicine.
+            Forget Your{'\n'}Breadcrumbs—{'\n'}Just Don't Forget{'\n'}Your Medicine.
           </Text>
-          <Text style={styles.bannerSub}>Autonomous med delivery</Text>
+          <Text style={styles.bannerSub}>Autonomous Med Delivery</Text>
         </View>
         <View style={styles.bannerRight}>
           <BreadIllustration />
@@ -80,7 +80,8 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <TextInput
           style={styles.search}
-          placeholder="Search patients…"
+          placeholder="Search"
+          placeholderTextColor="#7C6B5E"
           value={searchQuery}
           onChangeText={setSearchQuery}
           clearButtonMode="while-editing"

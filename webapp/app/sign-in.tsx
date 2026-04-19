@@ -57,6 +57,7 @@ export default function SignInScreen(): ReactElement {
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor="#7C6B5E"
         autoCapitalize="none"
         keyboardType="email-address"
         value={email}
@@ -65,6 +66,7 @@ export default function SignInScreen(): ReactElement {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#7C6B5E"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
