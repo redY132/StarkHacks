@@ -12,15 +12,13 @@ import {
 
 import AddPatientModal from '@/components/home/AddPatientModal';
 import PatientList from '@/components/home/PatientList';
-import WeeklySchedule from '@/components/home/WeeklySchedule';
 import { useAuth } from '@/contexts/AuthProvider';
-import { getPatients, getRooms, getSchedules } from '@/lib/firestore';
-import type { Patient, Room, Schedule } from '@/types';
+import { getPatients, getRooms } from '@/lib/firestore';
+import type { Patient, Room } from '@/types';
 
 export default function HomeScreen() {
   const { user } = useAuth();
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,13 +29,8 @@ export default function HomeScreen() {
     if (!user) return;
     setLoading(true);
     try {
-      const [p, s, r] = await Promise.all([
-        getPatients(user.id),
-        getSchedules(user.id),
-        getRooms(),
-      ]);
+      const [p, r] = await Promise.all([getPatients(user.id), getRooms()]);
       setPatients(p);
-      setSchedules(s);
       setRooms(r);
     } catch (e) {
       console.error('Failed to load home data', e);
@@ -84,25 +77,12 @@ export default function HomeScreen() {
       {loading ? (
         <ActivityIndicator style={styles.loader} size="large" />
       ) : (
-        <>
-          <WeeklySchedule
-            patients={patients}
-            schedules={schedules}
-            onScheduleDeleted={(id) => setSchedules((s) => s.filter((x) => x.id !== id))}
-            onScheduleUpdated={(updated) =>
-              setSchedules((s) => s.map((x) => (x.id === updated.id ? updated : x)))
-            }
-          />
-          <PatientList
-            patients={patients}
-            removeMode={removeMode}
-            searchQuery={searchQuery}
-            onPatientDeleted={(id) => {
-              setPatients((p) => p.filter((x) => x.id !== id));
-              setSchedules((s) => s.filter((x) => x.patientId !== id));
-            }}
-          />
-        </>
+        <PatientList
+          patients={patients}
+          removeMode={removeMode}
+          searchQuery={searchQuery}
+          onPatientDeleted={(id) => setPatients((p) => p.filter((x) => x.id !== id))}
+        />
       )}
 
       <AddPatientModal
