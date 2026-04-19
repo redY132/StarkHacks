@@ -1,7 +1,7 @@
 const { WebSocketServer } = require("ws");
 
-const PORT = 8765;
-const wss = new WebSocketServer({ port: PORT, host: "0.0.0.0" });
+const PORT = 8080;
+const wss = new WebSocketServer({ port: PORT });
 
 const clients = new Set();
 
@@ -15,6 +15,7 @@ wss.on("connection", (ws, req) => {
 
   ws.on("message", (data) => {
     let cmd;
+    console.log(data.toString());
     try {
       cmd = JSON.parse(data.toString());
     } catch {
@@ -22,6 +23,7 @@ wss.on("connection", (ws, req) => {
       return;
     }
 
+    console.log(`[panko] data: ${cmd}`);
     console.log(`[panko] received: ${cmd.type}`);
 
     switch (cmd.type) {

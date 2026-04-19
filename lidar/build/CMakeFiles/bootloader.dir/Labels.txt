@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/aup/StarkHacks/lidar/build/CMakeFiles/bootloader
+/home/aup/StarkHacks/lidar/build/CMakeFiles/bootloader.rule
+/home/aup/StarkHacks/lidar/build/CMakeFiles/bootloader-complete.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/aup/StarkHacks/lidar/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

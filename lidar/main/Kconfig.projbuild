@@ -1,0 +1,70 @@
+menu "LiDAR Mapping Config"
+
+    config WIFI_SSID
+        string "WiFi SSID"
+        default "myssid"
+
+    config WIFI_PASSWORD
+        string "WiFi Password"
+        default "mypassword"
+
+    config DEVICE_ID
+        string "ESP32 Device ID"
+        default "panko-lidar-01"
+        help
+            Unique identifier stamped on every LIDAR_SCAN WebSocket message.
+
+    config WS_URI
+        string "Mini PC WebSocket URI"
+        default "ws://172.20.10.7:8765"
+        help
+            WebSocket URI of the Mini PC server, e.g. ws://192.168.1.100:8765
+
+    config TFLUNA_UART_NUM
+        int "TF-Luna UART port number"
+        default 1
+        range 1 2
+
+    config TFLUNA_TX_PIN
+        int "TF-Luna TX GPIO pin (ESP32 TX -> Luna RX)"
+        default 17
+
+    config TFLUNA_RX_PIN
+        int "TF-Luna RX GPIO pin (Luna TX -> ESP32 RX)"
+        default 18
+
+    config SERVO_PIN
+        int "Servo signal GPIO pin"
+        default 4
+
+    config SERVO_STOP_US
+        int "Servo stop pulse width (microseconds)"
+        default 1500
+        help
+            Pulse width that holds the servo still. Trim this if the servo
+            creeps at rest (typically 1400-1600 us).
+
+    config SERVO_RUN_US
+        int "Servo run pulse width (microseconds)"
+        default 1600
+        help
+            Pulse width for slow CW rotation. Higher = faster.
+            Start close to SERVO_STOP_US for a slow, stable scan.
+
+    config SCAN_PERIOD_MS
+        int "Time for one full 360 degree revolution (ms)"
+        default 1500
+        help
+            Calibrate by timing how long the servo takes to complete one
+            full revolution at SERVO_RUN_US. Used to space TF-Luna samples
+            evenly across 360 degrees.
+
+    config SCAN_SAMPLES
+        int "TF-Luna samples per revolution"
+        default 360
+        range 36 720
+        help
+            Number of distance readings per scan. Each reading maps to
+            (360 / SCAN_SAMPLES) degrees of arc.
+
+endmenu
