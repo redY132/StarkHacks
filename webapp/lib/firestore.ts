@@ -1,5 +1,6 @@
 import {
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -145,6 +146,18 @@ export async function updatePatientEmbedding(
   await updateDoc(ref, {
     faceEmbedding: embedding,
     ...(model ? { faceEmbeddingModel: model } : {}),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function updatePatientMedicines(
+  patientId: string,
+  medicineName: string,
+): Promise<void> {
+  const userId = requireUid();
+  const ref = doc(db, 'users', userId, 'patients', patientId);
+  await updateDoc(ref, {
+    medicines: arrayUnion(medicineName),
     updatedAt: serverTimestamp(),
   });
 }

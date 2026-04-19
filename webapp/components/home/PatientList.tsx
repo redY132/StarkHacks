@@ -1,12 +1,12 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { deletePatient } from '@/lib/firestore';
-import type { Patient, Room } from '@/types';
+import type { Patient } from '@/types';
 
 type Props = {
   patients: Patient[];
-  rooms: Room[];
   removeMode: boolean;
   searchQuery: string;
   onPatientDeleted: (id: string) => void;
@@ -14,7 +14,6 @@ type Props = {
 
 export default function PatientList({
   patients,
-  rooms,
   removeMode,
   searchQuery,
   onPatientDeleted,
@@ -57,10 +56,6 @@ export default function PatientList({
     }
   }
 
-  function roomName(roomId: string): string {
-    return rooms.find((r) => r.id === roomId)?.name ?? roomId;
-  }
-
   return (
     <ScrollView style={styles.list} contentContainerStyle={styles.content}>
       {filtered.length === 0 && (
@@ -74,7 +69,6 @@ export default function PatientList({
             <Pressable style={styles.rowHeader} onPress={() => toggle(patient.id)}>
               <View style={styles.info}>
                 <Text style={styles.name}>{patient.name}</Text>
-                <Text style={styles.room}>{roomName(patient.roomId)}</Text>
               </View>
               <View style={styles.rowRight}>
                 {removeMode && (
@@ -93,19 +87,23 @@ export default function PatientList({
 
             {isExpanded && (
               <View style={styles.detail}>
-                <Text style={styles.detailLabel}>ROOM</Text>
-                <Text style={styles.detailValue}>{roomName(patient.roomId)}</Text>
-
-                <Text style={styles.detailLabel}>MEDICINES</Text>
+                <Text style={styles.detailLabel}>MEDICATIONS</Text>
                 {patient.medicines.length === 0 ? (
-                  <Text style={styles.detailValue}>None assigned</Text>
+                  <Text style={styles.detailValue}>No medications assigned</Text>
                 ) : (
                   patient.medicines.map((m) => (
                     <Text key={m} style={styles.detailValue}>• {m}</Text>
                   ))
                 )}
 
-                <Text style={styles.detailLabel}>FACE ENROLLMENT</Text>
+                <Pressable
+                  style={styles.addMedBtn}
+                  onPress={() => router.push(`/add-medication?patientId=${patient.id}`)}
+                >
+                  <Text style={styles.addMedBtnText}>+ Add Medication</Text>
+                </Pressable>
+
+                <Text style={[styles.detailLabel, { marginTop: 14 }]}>FACE ENROLLMENT</Text>
                 {patient.faceEmbedding.length > 0 ? (
                   <Text style={styles.enrolled}>Enrolled ({patient.faceEmbedding.length}d vector)</Text>
                 ) : (
@@ -134,7 +132,6 @@ const styles = StyleSheet.create({
   rowHeader: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12 },
   info: { flex: 1 },
   name: { fontSize: 16, fontWeight: '600', color: '#111' },
-  room: { fontSize: 13, color: '#6B7280', marginTop: 2 },
   rowRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   delIcon: {
     width: 28,
@@ -159,10 +156,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#9CA3AF',
     letterSpacing: 0.5,
-    marginTop: 10,
+    marginTop: 4,
   },
   detailValue: { fontSize: 14, color: '#374151' },
+  addMedBtn: {
+    marginTop: 10,
+    backgroundColor: '#F0FDF4',
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  addMedBtnText: { fontSize: 14, fontWeight: '600', color: '#22C55E' },
   enrolled: { fontSize: 13, color: '#16A34A', fontWeight: '600' },
   pending: { fontSize: 13, color: '#D97706', fontWeight: '500' },
-  unenrolled: { fontSize: 13, color: '#9CA3AF' },
 });

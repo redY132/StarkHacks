@@ -1,4 +1,15 @@
 {
   "idf.openOcdConfigs": ["board/esp32s3-builtin.cfg"],
-  "idf.port": "/dev/tty.usbserial-1120"
+  "idf.port": "/dev/tty.usbmodem11101",
+  "idf.customExtraVars": {
+    "IDF_PATH": "/Users/Joshuasren/esp/v6.0/esp-idf",
+    "IDF_TOOLS_PATH": "/Users/Joshuasren/.espressif",
+    "IDF_PYTHON_ENV_PATH": "/Users/Joshuasren/.espressif/python_env/idf6.0_py3.13_env"
+  },
+  "clangd.path": "/Users/Joshuasren/.espressif/tools/esp-clang/esp-20.1.1_20250829/esp-clang/bin/clangd",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=/Users/Joshuasren/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
+    "--compile-commands-dir=/Users/Joshuasren/Documents/GitHub/StarkHacks/build"
+  ]
 }
