@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -170,6 +171,21 @@ export async function updatePatientEmbedding(
     ...(model ? { faceEmbeddingModel: model } : {}),
     updatedAt: serverTimestamp(),
   });
+}
+
+export async function removePatientMedicine(
+  patientId: string,
+  medicineIndex: number,
+): Promise<void> {
+  const userId = requireUid();
+  const ref = doc(db, 'users', userId, 'patients', patientId);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) throw new Error('Patient not found');
+  const medicines: unknown[] = Array.isArray(snap.data().medicines)
+    ? [...(snap.data().medicines as unknown[])]
+    : [];
+  medicines.splice(medicineIndex, 1);
+  await updateDoc(ref, { medicines, updatedAt: serverTimestamp() });
 }
 
 export async function updatePatientMedicines(

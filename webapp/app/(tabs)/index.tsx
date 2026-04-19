@@ -109,6 +109,15 @@ export default function HomeScreen() {
           removeMode={removeMode}
           searchQuery={searchQuery}
           onPatientDeleted={(id) => setPatients((p) => p.filter((x) => x.id !== id))}
+          onMedicineRemoved={(patientId, medIndex) =>
+            setPatients((prev) =>
+              prev.map((p) =>
+                p.id !== patientId
+                  ? p
+                  : { ...p, medicines: p.medicines.filter((_, i) => i !== medIndex) },
+              ),
+            )
+          }
         />
       )}
 

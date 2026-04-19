@@ -1,8 +1,9 @@
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { deletePatient } from '@/lib/firestore';
+import { deletePatient, removePatientMedicine } from '@/lib/firestore';
 import type { Patient } from '@/types';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
   removeMode: boolean;
   searchQuery: string;
   onPatientDeleted: (id: string) => void;
+  onMedicineRemoved: (patientId: string, medicineIndex: number) => void;
 };
 
 export default function PatientList({
@@ -17,9 +19,11 @@ export default function PatientList({
   removeMode,
   searchQuery,
   onPatientDeleted,
+  onMedicineRemoved,
 }: Props) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [removingMed, setRemovingMed] = useState<string | null>(null);
 
   const filtered = patients.filter((p) =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -56,6 +60,51 @@ export default function PatientList({
     }
   }
 
+  function openMedMenu(patient: Patient, medIndex: number) {
+    const medName = patient.medicines[medIndex]?.name ?? 'Medication';
+    Alert.alert(
+      medName,
+      undefined,
+      [
+        {
+          text: 'Remove Medication',
+          style: 'destructive',
+          onPress: () => confirmRemoveMed(patient, medIndex),
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ],
+    );
+  }
+
+  function confirmRemoveMed(patient: Patient, medIndex: number) {
+    const medName = patient.medicines[medIndex]?.name ?? 'this medication';
+    Alert.alert(
+      'Remove Medication',
+      `Are you sure you want to remove ${medName}? This cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => void doRemoveMed(patient.id, medIndex),
+        },
+      ],
+    );
+  }
+
+  async function doRemoveMed(patientId: string, medIndex: number) {
+    const key = `${patientId}-${medIndex}`;
+    setRemovingMed(key);
+    try {
+      await removePatientMedicine(patientId, medIndex);
+      onMedicineRemoved(patientId, medIndex);
+    } catch {
+      Alert.alert('Error', 'Failed to remove medication.');
+    } finally {
+      setRemovingMed(null);
+    }
+  }
+
   return (
     <ScrollView style={styles.list} contentContainerStyle={styles.content}>
       {filtered.length === 0 && (
@@ -89,14 +138,25 @@ export default function PatientList({
               <View style={styles.detail}>
                 <Text style={styles.detailLabel}>MEDICATIONS</Text>
                 {patient.medicines.length === 0 ? (
-                  <Text style={styles.detailValue}>No medications assigned</Text>
+                  <Text style={styles.detailValue}>No medications added yet</Text>
                 ) : (
                   patient.medicines.map((m, i) => (
                     <View key={i} style={styles.medItem}>
-                      <Text style={styles.medName}>{m.name}</Text>
-                      {!!m.description && (
-                        <Text style={styles.medDesc}>{m.description}</Text>
-                      )}
+                      <View style={styles.medItemRow}>
+                        <View style={styles.medItemInfo}>
+                          <Text style={styles.medName}>{m.name}</Text>
+                          {!!m.description && (
+                            <Text style={styles.medDesc}>{m.description}</Text>
+                          )}
+                        </View>
+                        <Pressable
+                          hitSlop={8}
+                          disabled={removingMed === `${patient.id}-${i}`}
+                          onPress={() => openMedMenu(patient, i)}
+                        >
+                          <Ionicons name="ellipsis-vertical" size={16} color="#7C6B5E" />
+                        </Pressable>
+                      </View>
                     </View>
                   ))
                 )}
@@ -170,6 +230,8 @@ const styles = StyleSheet.create({
   },
   detailValue: { fontSize: 14, color: '#3D2B1F' },
   medItem: { marginBottom: 10 },
+  medItemRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 },
+  medItemInfo: { flex: 1 },
   medName: { fontSize: 15, fontWeight: '700', color: '#3D2B1F' },
   medDesc: { fontSize: 13, color: '#7C6B5E', marginTop: 2 },
   addMedBtn: {

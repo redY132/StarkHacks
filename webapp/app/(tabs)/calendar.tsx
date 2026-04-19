@@ -3,6 +3,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 
 import { useAuth } from '@/contexts/AuthProvider';
-import { getPatients } from '@/lib/firestore';
+import { getPatients, removePatientMedicine } from '@/lib/firestore';
 import type { Patient } from '@/types';
 
 const PARCHMENT = '#EDEDE9';
@@ -36,6 +37,8 @@ const JS_DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 
 type MedEntry = {
   id: string;
+  patientId: string;
+  medIndex: number;
   patientName: string;
   time: string;
   name: string;
@@ -54,6 +57,8 @@ function buildEntries(patients: Patient[]): MedEntry[] {
     patient.medicines.forEach((med, idx) => {
       entries.push({
         id: `${patient.id}-${idx}`,
+        patientId: patient.id,
+        medIndex: idx,
         patientName: patient.name,
         time: med.time,
         name: med.name,
@@ -100,6 +105,7 @@ export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState(today.getDate());
   const [entries, setEntries] = useState<MedEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [removingMed, setRemovingMed] = useState<string | null>(null);
 
   const loadEntries = useCallback(async () => {
     if (!user) return;
@@ -123,6 +129,56 @@ export default function CalendarScreen() {
       void loadEntries();
     }, [loadEntries]),
   );
+
+  function openMedMenu(med: MedEntry) {
+    Alert.alert(
+      med.name,
+      undefined,
+      [
+        {
+          text: 'Remove Medication',
+          style: 'destructive',
+          onPress: () => confirmRemoveMed(med),
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ],
+    );
+  }
+
+  function confirmRemoveMed(med: MedEntry) {
+    Alert.alert(
+      'Remove Medication',
+      `Are you sure you want to remove ${med.name}? This cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => void doRemoveMed(med),
+        },
+      ],
+    );
+  }
+
+  async function doRemoveMed(med: MedEntry) {
+    setRemovingMed(med.id);
+    try {
+      await removePatientMedicine(med.patientId, med.medIndex);
+      setEntries((prev) =>
+        prev
+          .filter((e) => e.id !== med.id)
+          .map((e) =>
+            e.patientId === med.patientId && e.medIndex > med.medIndex
+              ? { ...e, id: `${e.patientId}-${e.medIndex - 1}`, medIndex: e.medIndex - 1 }
+              : e,
+          ),
+      );
+    } catch {
+      Alert.alert('Error', 'Failed to remove medication.');
+    } finally {
+      setRemovingMed(null);
+    }
+  }
 
   const selectedDay = weekDays.find((d) => d.getDate() === selectedDate) ?? today;
 
@@ -216,7 +272,11 @@ export default function CalendarScreen() {
                   >
                     {med.patientName} - {med.name}
                   </Text>
-                  <Pressable hitSlop={8}>
+                  <Pressable
+                    hitSlop={8}
+                    disabled={removingMed === med.id}
+                    onPress={() => openMedMenu(med)}
+                  >
                     <Ionicons
                       name="ellipsis-vertical"
                       size={18}
