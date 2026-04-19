@@ -4,8 +4,8 @@ import type { ComponentProps, ReactElement } from 'react';
 
 type IoniconsName = ComponentProps<typeof Ionicons>['name'];
 
-const ACTIVE_COLOR = '#F97316';
-const INACTIVE_COLOR = '#9CA3AF';
+const ACTIVE_COLOR = '#5C3D2E';
+const INACTIVE_COLOR = '#7C6B5E';
 
 function tabIcon(outline: IoniconsName, filled: IoniconsName) {
   return ({ color, focused }: { color: string; focused: boolean }) => (
@@ -20,7 +20,7 @@ export default function TabsLayout(): ReactElement {
         headerShown: false,
         tabBarActiveTintColor: ACTIVE_COLOR,
         tabBarInactiveTintColor: INACTIVE_COLOR,
-        tabBarStyle: { borderTopColor: '#F3F4F6', backgroundColor: '#fff' },
+        tabBarStyle: { borderTopColor: '#D5BDAF', backgroundColor: '#F5EBE0' },
       }}
     >
       <Tabs.Screen

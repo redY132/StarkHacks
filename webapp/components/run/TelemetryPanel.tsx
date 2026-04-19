@@ -8,15 +8,15 @@ type Props = {
 };
 
 function connDotColor(state: WebSocketConnectionState): string {
-  if (state === 'connected') return '#22C55E';
-  if (state === 'connecting' || state === 'reconnecting') return '#F59E0B';
-  return '#EF4444';
+  if (state === 'connected') return '#5C3D2E';
+  if (state === 'connecting' || state === 'reconnecting') return '#7C6B5E';
+  return '#D5BDAF';
 }
 
 function batteryColor(pct: number): string {
-  if (pct > 50) return '#22C55E';
-  if (pct > 20) return '#F59E0B';
-  return '#EF4444';
+  if (pct > 50) return '#5C3D2E';
+  if (pct > 20) return '#7C6B5E';
+  return '#D5BDAF';
 }
 
 export default function TelemetryPanel({ telemetry, connectionState }: Props) {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#3D2B1F',
     paddingHorizontal: 16,
     paddingVertical: 12,
     gap: 10,
@@ -61,19 +61,19 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   badge: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: '#5C3D2E',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
   },
   badgeText: {
-    color: '#fff',
+    color: '#F5EBE0',
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.5,
   },
   pos: {
-    color: '#9CA3AF',
+    color: '#D5BDAF',
     fontSize: 12,
     fontFamily: 'monospace',
   },
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   connLabel: {
     marginLeft: 'auto',
-    color: '#6B7280',
+    color: '#D5BDAF',
     fontSize: 11,
   },
 });

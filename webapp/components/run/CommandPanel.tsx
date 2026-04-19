@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 16,
     paddingBottom: 24,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5EBE0',
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: '#D5BDAF',
   },
   btn: {
     flex: 1,
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
-  btnPrimary: { backgroundColor: '#111' },
-  btnPrimaryText: { color: '#fff', fontWeight: '700', fontSize: 15 },
+  btnPrimary: { backgroundColor: '#5C3D2E' },
+  btnPrimaryText: { color: '#F5EBE0', fontWeight: '700', fontSize: 15 },
   btnDanger: { backgroundColor: '#FEE2E2' },
   btnDangerText: { color: '#DC2626', fontWeight: '700', fontSize: 15 },
 });

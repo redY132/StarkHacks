@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
@@ -16,25 +17,23 @@ import {
 } from 'react-native';
 
 import { addPatient } from '@/lib/firestore';
-// import { robotWebSocket } from '@/lib/websocket'; // TODO: re-enable when Mini PC WebSocket is ready
-import type { Patient, Room } from '@/types';
+import type { Patient } from '@/types';
 
 type Props = {
   visible: boolean;
-  rooms: Room[];
   onClose: () => void;
   onPatientAdded: (patient: Patient) => void;
 };
 
-export default function AddPatientModal({ visible, rooms, onClose, onPatientAdded }: Props) {
+export default function AddPatientModal({ visible, onClose, onPatientAdded }: Props) {
   const [name, setName] = useState('');
-  const [roomId, setRoomId] = useState<string | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [photo, setPhoto] = useState<{ uri: string; base64: string } | null>(null);
   const [saving, setSaving] = useState(false);
 
   function reset() {
     setName('');
-    setRoomId(null);
+    setPhoneNumber('');
     setPhoto(null);
   }
 
@@ -81,23 +80,16 @@ export default function AddPatientModal({ visible, rooms, onClose, onPatientAdde
 
   async function handleSubmit() {
     if (!name.trim()) { Alert.alert('Name required'); return; }
-    if (!photo) { Alert.alert('Face photo required'); return; }
+    if (!phoneNumber.trim()) { Alert.alert('Phone number required'); return; }
 
     setSaving(true);
     try {
       const patient = await addPatient({
         name: name.trim(),
-        roomId: roomId ?? '',
-        faceEmbedding: [], // populated async when Mini PC responds via FACE_ENROLLED
+        phone_number: phoneNumber.trim(),
+        faceEmbedding: [],
         medicines: [],
       });
-
-      // TODO: re-enable when Mini PC WebSocket is ready
-      // robotWebSocket.sendCommand({
-      //   type: 'ENROLL_FACE',
-      //   patientId: patient.id,
-      //   imageBase64: photo.base64,
-      // });
 
       onPatientAdded(patient);
       handleClose();
@@ -121,6 +113,8 @@ export default function AddPatientModal({ visible, rooms, onClose, onPatientAdde
             <View style={styles.handle} />
             <Text style={styles.title}>Add Patient</Text>
             <ScrollView contentContainerStyle={styles.form} keyboardShouldPersistTaps="handled">
+
+              {/* Name */}
               <Text style={styles.label}>Name</Text>
               <TextInput
                 style={styles.input}
@@ -130,30 +124,25 @@ export default function AddPatientModal({ visible, rooms, onClose, onPatientAdde
                 autoCapitalize="words"
               />
 
-              <Text style={styles.label}>Room</Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.chipRow}
-              >
-                {rooms.length === 0 ? (
-                  <Text style={styles.noRooms}>No rooms yet — tap "+ Room" to add one.</Text>
-                ) : (
-                  rooms.map((r) => (
-                    <Pressable
-                      key={r.id}
-                      style={[styles.chip, roomId === r.id && styles.chipSelected]}
-                      onPress={() => setRoomId(r.id)}
-                    >
-                      <Text style={[styles.chipText, roomId === r.id && styles.chipTextSelected]}>
-                        {r.name}
-                      </Text>
-                    </Pressable>
-                  ))
-                )}
-              </ScrollView>
+              {/* Phone Number */}
+              <Text style={styles.label}>Phone Number</Text>
+              <View style={styles.iconInput}>
+                <Ionicons name="call-outline" size={18} color="#7C6B5E" />
+                <TextInput
+                  style={styles.iconInputField}
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                  placeholder="e.g. +1 (555) 123-4567"
+                  keyboardType="phone-pad"
+                  autoComplete="tel"
+                />
+              </View>
 
-              <Text style={styles.label}>Face Photo</Text>
+              {/* Medicine Photo (optional) */}
+              <View style={styles.labelRow}>
+                <Text style={styles.label}>Medicine Photo</Text>
+                <Text style={styles.optional}>(optional)</Text>
+              </View>
               <View style={styles.photoRow}>
                 <Pressable style={styles.photoBtn} onPress={() => void pickPhoto('camera')}>
                   <Text style={styles.photoBtnText}>Camera</Text>
@@ -187,7 +176,7 @@ const styles = StyleSheet.create({
   kavWrapper: { flex: 1, justifyContent: 'flex-end' },
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
   sheet: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F5EBE0',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 12,
@@ -199,52 +188,55 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#D5BDAF',
     alignSelf: 'center',
     marginBottom: 16,
   },
-  title: { fontSize: 20, fontWeight: '700', marginBottom: 4 },
+  title: { fontSize: 20, fontWeight: '700', marginBottom: 4, color: '#3D2B1F' },
   form: { gap: 2, paddingBottom: 16 },
-  label: { fontSize: 13, fontWeight: '700', color: '#6B7280', marginTop: 16, marginBottom: 6 },
+  label: { fontSize: 13, fontWeight: '700', color: '#7C6B5E', marginTop: 16, marginBottom: 6 },
+  labelRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6, marginTop: 16, marginBottom: 6 },
+  optional: { fontSize: 12, color: '#7C6B5E', fontWeight: '500' },
   input: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#D5BDAF',
     borderRadius: 10,
     padding: 12,
     fontSize: 16,
-    color: '#111',
+    color: '#3D2B1F',
+    backgroundColor: '#E3D5CA',
   },
-  chipRow: { gap: 8, paddingVertical: 2 },
-  noRooms: { color: '#9CA3AF', fontSize: 14 },
-  chip: {
-    paddingHorizontal: 16,
-    paddingVertical: 9,
-    borderRadius: 20,
+  iconInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#F9FAFB',
+    borderColor: '#D5BDAF',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    backgroundColor: '#E3D5CA',
   },
-  chipSelected: { backgroundColor: '#2563EB', borderColor: '#2563EB' },
-  chipText: { fontSize: 14, color: '#374151', fontWeight: '500' },
-  chipTextSelected: { color: '#fff', fontWeight: '600' },
+  iconInputField: { flex: 1, fontSize: 16, color: '#3D2B1F' },
   photoRow: { flexDirection: 'row', gap: 10 },
   photoBtn: {
     flex: 1,
     padding: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#D5BDAF',
     alignItems: 'center',
+    backgroundColor: '#E3D5CA',
   },
-  photoBtnText: { fontSize: 14, fontWeight: '600', color: '#374151' },
+  photoBtnText: { fontSize: 14, fontWeight: '600', color: '#3D2B1F' },
   preview: { width: '100%', height: 200, borderRadius: 12, marginTop: 8 },
   submitBtn: {
     marginTop: 24,
-    backgroundColor: '#111',
+    backgroundColor: '#5C3D2E',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   submitBtnDisabled: { opacity: 0.5 },
-  submitBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  submitBtnText: { color: '#F5EBE0', fontSize: 16, fontWeight: '700' },
 });

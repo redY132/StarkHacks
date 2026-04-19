@@ -7,7 +7,8 @@
       "Bash(mkdir -p /Users/Joshuasren/Documents/GitHub/StarkHacks/server)",
       "Bash(touch /Users/Joshuasren/Documents/GitHub/StarkHacks/webapp/components/run/WsTestButton.tsx)",
       "Bash(grep *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npx expo *)"
     ]
   }
 }

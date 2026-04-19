@@ -92,7 +92,12 @@ export default function PatientList({
                   <Text style={styles.detailValue}>No medications assigned</Text>
                 ) : (
                   patient.medicines.map((m, i) => (
-                    <Text key={i} style={styles.detailValue}>• {m.name}</Text>
+                    <View key={i} style={styles.medItem}>
+                      <Text style={styles.medName}>{m.name}</Text>
+                      {!!m.description && (
+                        <Text style={styles.medDesc}>{m.description}</Text>
+                      )}
+                    </View>
                   ))
                 )}
 
@@ -102,13 +107,6 @@ export default function PatientList({
                 >
                   <Text style={styles.addMedBtnText}>+ Add Medication</Text>
                 </Pressable>
-
-                <Text style={[styles.detailLabel, { marginTop: 14 }]}>FACE ENROLLMENT</Text>
-                {patient.faceEmbedding.length > 0 ? (
-                  <Text style={styles.enrolled}>Enrolled ({patient.faceEmbedding.length}d vector)</Text>
-                ) : (
-                  <Text style={styles.pending}>Enrollment pending</Text>
-                )}
               </View>
             )}
           </View>
@@ -120,19 +118,29 @@ export default function PatientList({
 
 const styles = StyleSheet.create({
   list: { flex: 1 },
-  content: { padding: 16, gap: 8, paddingBottom: 40 },
-  empty: { color: '#9CA3AF', textAlign: 'center', marginTop: 32, fontSize: 15 },
+  content: { padding: 16, gap: 12, paddingBottom: 40 },
+  empty: { color: '#7C6B5E', textAlign: 'center', marginTop: 32, fontSize: 15 },
   row: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
+    backgroundColor: '#D6CCC2',
+    borderRadius: 18,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    shadowColor: '#D5BDAF',
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
   },
-  rowHeader: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12 },
+  rowHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 22,
+    gap: 14,
+    minHeight: 88,
+  },
   info: { flex: 1 },
-  name: { fontSize: 16, fontWeight: '600', color: '#111' },
-  rowRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  name: { fontSize: 18, fontWeight: '700', color: '#3D2B1F', letterSpacing: -0.2 },
+  rowRight: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   delIcon: {
     width: 28,
     height: 28,
@@ -143,32 +151,35 @@ const styles = StyleSheet.create({
   },
   delIconDisabled: { opacity: 0.4 },
   delIconText: { color: '#DC2626', fontSize: 13, fontWeight: '700' },
-  chevron: { color: '#9CA3AF', fontSize: 12 },
+  chevron: { color: '#7C6B5E', fontSize: 12 },
   detail: {
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    padding: 14,
+    borderTopColor: '#D5BDAF',
+    paddingHorizontal: 20,
+    paddingVertical: 18,
     gap: 4,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#E3D5CA',
   },
   detailLabel: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#9CA3AF',
+    color: '#7C6B5E',
     letterSpacing: 0.5,
     marginTop: 4,
+    marginBottom: 6,
   },
-  detailValue: { fontSize: 14, color: '#374151' },
+  detailValue: { fontSize: 14, color: '#3D2B1F' },
+  medItem: { marginBottom: 10 },
+  medName: { fontSize: 15, fontWeight: '700', color: '#3D2B1F' },
+  medDesc: { fontSize: 13, color: '#7C6B5E', marginTop: 2 },
   addMedBtn: {
     marginTop: 10,
-    backgroundColor: '#F0FDF4',
+    backgroundColor: '#F5EBE0',
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: '#D5BDAF',
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
   },
-  addMedBtnText: { fontSize: 14, fontWeight: '600', color: '#22C55E' },
-  enrolled: { fontSize: 13, color: '#16A34A', fontWeight: '600' },
-  pending: { fontSize: 13, color: '#D97706', fontWeight: '500' },
+  addMedBtnText: { fontSize: 14, fontWeight: '600', color: '#5C3D2E' },
 });

@@ -3,12 +3,16 @@ export type MedicineEntry = {
   description: string;
   dose_description: string;
   prescribed_by: string;
+  time: string;        // "HH:MM" 24-hour (e.g. "10:00")
+  days: string[];      // ["Mon","Tue",...] — used when repeat is "Weekly"
+  repeat: string;      // "Daily" | "Weekly" | "Monthly"
+  monthly_day: number; // day-of-month (1–31) — used when repeat is "Monthly"
 };
 
 export type Patient = {
   id: string;
   name: string;
-  roomId: string;
+  phone_number: string;
   faceEmbedding: number[];
   faceEmbeddingModel?: string;
   medicines: MedicineEntry[];

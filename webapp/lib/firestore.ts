@@ -36,7 +36,7 @@ function mapPatientDoc(id: string, data: DocumentData): Patient {
   return {
     id,
     name: String(data.name ?? ''),
-    roomId: String(data.roomId ?? ''),
+    phone_number: String(data.phone_number ?? ''),
     faceEmbedding: Array.isArray(data.faceEmbedding)
       ? (data.faceEmbedding as number[])
       : [],
@@ -46,12 +46,25 @@ function mapPatientDoc(id: string, data: DocumentData): Patient {
     medicines: Array.isArray(data.medicines)
       ? data.medicines.map((m): MedicineEntry =>
           typeof m === 'string'
-            ? { name: m, description: '', dose_description: '', prescribed_by: '' }
+            ? {
+                name: m,
+                description: '',
+                dose_description: '',
+                prescribed_by: '',
+                time: '',
+                days: [],
+                repeat: 'Daily',
+                monthly_day: 0,
+              }
             : {
                 name: String(m.name ?? ''),
                 description: String(m.description ?? ''),
                 dose_description: String(m.dose_description ?? ''),
                 prescribed_by: String(m.prescribed_by ?? ''),
+                time: String(m.time ?? ''),
+                days: Array.isArray(m.days) ? m.days.map(String) : [],
+                repeat: String(m.repeat ?? 'Daily'),
+                monthly_day: typeof m.monthly_day === 'number' ? m.monthly_day : 0,
               },
         )
       : [],

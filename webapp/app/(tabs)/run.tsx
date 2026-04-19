@@ -20,7 +20,7 @@ export default function RunScreen() {
   const hasMap = rooms.length > 0;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#1C1C1E' }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#EDEDE9' }} edges={['top', 'bottom']}>
       <TelemetryPanel telemetry={telemetry} connectionState={connectionState} />
       <MapPanel telemetry={telemetry} rooms={rooms} />
       <WsTestButton />

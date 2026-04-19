@@ -83,35 +83,39 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: 'center',
     gap: 12,
+    backgroundColor: '#EDEDE9',
   },
   title: {
     fontSize: 28,
     fontWeight: '600',
     marginBottom: 12,
+    color: '#3D2B1F',
   },
   error: {
     color: '#b00020',
   },
   hint: {
     fontSize: 12,
-    color: '#666',
+    color: '#7C6B5E',
     lineHeight: 17,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#D5BDAF',
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
+    backgroundColor: '#E3D5CA',
+    color: '#3D2B1F',
   },
   button: {
-    backgroundColor: '#111',
+    backgroundColor: '#5C3D2E',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonLabel: {
-    color: '#fff',
+    color: '#F5EBE0',
     fontWeight: '600',
   },
   spinner: {
